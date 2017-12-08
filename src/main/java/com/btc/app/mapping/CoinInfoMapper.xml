@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.btc.app.dao.CoinInfoMapper">
+    <resultMap id="BaseResultMap" type="com.btc.app.bean.CoinInfoBean">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="symbol" property="symbol" jdbcType="VARCHAR"/>
+        <result column="chinesename" property="chinesename" jdbcType="VARCHAR"/>
+        <result column="englishname" property="englishname" jdbcType="VARCHAR"/>
+        <result column="coinid" property="coinid" jdbcType="VARCHAR"/>
+        <result column="imageurl" property="imageurl" jdbcType="VARCHAR"/>
+        <result column="total_num" property="total_num" jdbcType="INTEGER"/>
+        <result column="cur_num" property="cur_num" jdbcType="INTEGER"/>
+        <result column="publish_time" property="publish_time" jdbcType="TIMESTAMP"/>
+        <result column="websites" property="websites" jdbcType="VARCHAR"/>
+        <result column="block_stations" property="block_stations" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, symbol, chinesename, englishname, imageurl, coinid, total_num, cur_num, publish_time, websites, block_stations, description
+    </sql>
+
+    <select id="testConnect" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from coininfo ORDER BY id DESC
+        limit 1
+    </select>
+
+    <select id="getAll" resultMap="BaseResultMap">
+        select * from coininfo
+    </select>
+
+    <select id="getCoinInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT *
+        FROM coininfo
+        WHERE coinid = #{coinid,jdbcType=VARCHAR} LIMIT 1
+    </select>
+
+    <insert id="insert" parameterType="com.btc.app.bean.CoinInfoBean">
+    insert into coininfo (symbol, englishname, chinesename,imageurl,
+    coinid, total_num, cur_num, publish_time, websites, block_stations, description)
+    values (#{symbol,jdbcType=VARCHAR},#{englishname,jdbcType=VARCHAR},#{chinesename,jdbcType=VARCHAR},
+    #{imageurl,jdbcType=VARCHAR},#{coinid,jdbcType=VARCHAR},
+    #{total_num, jdbcType=INTEGER},#{cur_num, jdbcType=INTEGER},#{publish_time, jdbcType=TIMESTAMP},
+    #{websites,jdbcType=VARCHAR},#{block_stations,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR})
+  </insert>
+</mapper>
