@@ -16,6 +16,42 @@
     id, username, phone, password, address, email, sex,register_time,account_status
   </sql>
 
+	<!-- add by mjw -->
+	<sql id="baseSql">
+		id,
+		useridentifier,
+		phone,
+		salt,
+		password,
+		status,
+		lastfailedsignintime,
+		loginfailedcount,
+		lastsuccesssignintime,
+		signUpTime
+	</sql>
+
+	<select id="searcUserByPhone" parameterType="com.btc.app.bean.UserModel" resultType="com.btc.app.bean.UserModel">
+		select
+		<include refid="baseSql" />
+		from user where phone = #{phone}
+	</select>
+
+	<select id="getByPage" parameterType="Map" resultType="com.btc.app.bean.UserModel">
+		select
+		<include refid="baseSql" />
+		from user
+		<where>
+			1 = 1
+			<if test="t.useridentifier != null and t.useridentifier != '' ">
+				and useridentifier = #{t.useridentifier}
+			</if>
+			<if test="t.phone != null and t.phone != '' ">
+				and phone = #{t.phone}
+			</if>
+		</where>
+	</select>	
+	<!-- add by mjw -->
+
     <select id="testConnect" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>

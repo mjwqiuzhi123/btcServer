@@ -42,23 +42,23 @@
     <div id="mainBody">
       <div id="cloud1" class="cloud"></div>
       <div id="cloud2" class="cloud"></div>
-    </div>  
-
-
-<div class="logintop">    
-    <span>欢迎登录采贝贷超业务系统管理平台</span>    
-    <ul>
-    <li><a href="http://www.icaibei.com/">回首页</a></li>
-    <li><a href="#">帮助</a></li>
-    <li><a href="http://www.icaibei.com/about.html">关于</a></li>
-    </ul>    
     </div>
-    
-    <div class="loginbody">
+
+
+	<div class="logintop">
+		<span>欢迎登录btc系统管理平台</span>
+		<ul>
+			<li><a href="#">回首页</a></li>
+			<li><a href="#">帮助</a></li>
+			<li><a href="#">关于</a></li>
+		</ul>
+	</div>
+
+	<div class="loginbody">
     
     <span class="systemlogo"></span> 
     <div><center><c:if test="${not empty error}"><span style="color: red;font-size: 20px;font-weight: bold;">${error}</span></c:if></center></div>
-    <form action="${pageContext.request.contextPath}/cbdc/loginOn.json" method="post">
+    <form action="${pageContext.request.contextPath}/user/loginOn.json" method="post">
 	    <div class="loginbox">
 		    <ul>
 			    <li><input name="adminName" id="adminName" type="text" class="loginuser" value="" onclick="JavaScript:this.value=''"/></li>
@@ -72,7 +72,7 @@
     </form>
     
     </div>
-    <div class="loginbm">版权所有  2017  <a href="http://www.uimaker.com">http://www.icaibei.com</a> 采贝贷款超市平台业务系统</div>
+    <div class="loginbm">版权所有  2017  <a href="#">btc</a> </div>
 </body>
 
 </html>
