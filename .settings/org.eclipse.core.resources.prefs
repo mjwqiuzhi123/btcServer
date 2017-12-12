@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/main/resources/btcapp.properties=UTF-8
 encoding//src/main/resources/generatorConfig.xml=UTF-8
 encoding//src/main/resources/spring-mybatis.xml=UTF-8
 encoding//src/main/webapp/admin/kindeditor-4.1.10/jsp/README.txt=UTF-8

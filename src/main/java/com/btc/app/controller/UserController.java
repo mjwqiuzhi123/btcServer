@@ -20,11 +20,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.btc.app.bean.UserBean;
 import com.btc.app.bean.UserModel;
-import com.btc.app.dto.LoginOnDTO;
-import com.btc.app.dto.PageParameter;
+import com.btc.app.request.dto.LoginOnDTO;
+import com.btc.app.request.dto.PageParameter;
+import com.btc.app.request.dto.UserRegisterRequestDTO;
 import com.btc.app.service.UserService;
 import com.btc.app.util.Constant;
 import com.btc.app.util.MD5Utils;
+import com.btc.app.util.ResponseEntity;
 
 /**
  * Created by cuixuan
@@ -32,7 +34,7 @@ import com.btc.app.util.MD5Utils;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController{
     @Resource
     private UserService userService;
       //add by mjw
@@ -217,5 +219,38 @@ public class UserController {
             session.setAttribute(Constant.CURRENT_USER, user);
         }
         return json.toJSONString();
+    }
+    
+    @RequestMapping(value={"/register.json"}, method={org.springframework.web.bind.annotation.RequestMethod.GET}, produces={"application/json; charset=utf-8"})
+    public ResponseEntity userRegister(HttpServletRequest request, HttpServletResponse response, @Valid UserRegisterRequestDTO userRegisterRequestDTO, BindingResult bind)
+    {
+      ResponseEntity responseEntity = new ResponseEntity();
+      try {
+        if (bind.hasErrors()) {
+          return getValidErrors(bind);
+        }
+
+        responseEntity = this.vericodesServiceImpl.searchByIndentFierAndType(new VericodesModel(userRegisterRequestDTO.getToken(), VeriCodeNum.ToCodeType(VeriCode.VeriCodeType.SignUp)));
+        if (!responseEntity.getResultCode().equals("0000")) {
+          return responseEntity;
+        }
+
+        UseVeriCodeResultDTO useVeriCodeResultDTO = (UseVeriCodeResultDTO)responseEntity.getDTO(UseVeriCodeResultDTO.class);
+
+        boolean isExit = this.userServiceI.searcUserByPhone(new CheckIsPhoneRequestDTO(useVeriCodeResultDTO));
+        if (!isExit) {
+          responseEntity.setMsg(ServiceCode.REGISTER_ONE);
+          return responseEntity;
+        }
+
+        boolean userModel = this.userServiceI.saveUser(userRegisterRequestDTO, useVeriCodeResultDTO);
+        if (!userModel) {
+          responseEntity.setMsg(ServiceCode.ERROR);
+          return responseEntity;
+        }
+        return responseEntity;
+      } catch (Exception e) {
+        responseEntity.setMsg(ServiceCode.EXCEPTION);
+      }return responseEntity;
     }
 }

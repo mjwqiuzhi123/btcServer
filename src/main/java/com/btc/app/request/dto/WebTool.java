@@ -1,4 +1,4 @@
-package com.btc.app.dto;
+package com.btc.app.request.dto;
 
 public class WebTool
 {

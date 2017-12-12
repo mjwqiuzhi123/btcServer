@@ -3,7 +3,7 @@ package com.btc.app.bean;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.btc.app.dto.LoginOnDTO;
+import com.btc.app.request.dto.LoginOnDTO;
 
 public class UserModel implements Serializable {
 	/**

@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import com.btc.app.bean.UserBean;
 import com.btc.app.bean.UserModel;
 import com.btc.app.dao.UserMapper;
-import com.btc.app.dto.LoginOnDTO;
-import com.btc.app.dto.PageParameter;
+import com.btc.app.request.dto.LoginOnDTO;
+import com.btc.app.request.dto.PageParameter;
 import com.btc.app.service.UserService;
 import com.btc.app.util.PasswordHash;
 

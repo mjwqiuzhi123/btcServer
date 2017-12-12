@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.btc.app.bean.UserBean;
 import com.btc.app.bean.UserModel;
-import com.btc.app.dto.LoginOnDTO;
-import com.btc.app.dto.PageParameter;
+import com.btc.app.request.dto.LoginOnDTO;
+import com.btc.app.request.dto.PageParameter;
 
 public interface UserService {
     int insertUser(UserBean user);
