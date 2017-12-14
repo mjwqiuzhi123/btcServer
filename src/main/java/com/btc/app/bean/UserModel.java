@@ -3,7 +3,10 @@ package com.btc.app.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.btc.app.request.dto.CheckIsPhoneRequestDTO;
 import com.btc.app.request.dto.LoginOnDTO;
+import com.btc.app.request.dto.UserLoginRequestDTO;
+import com.btc.app.response.dto.UseVeriCodeResultDTO;
 
 public class UserModel implements Serializable {
 	/**
@@ -59,6 +62,25 @@ public class UserModel implements Serializable {
 	public UserModel(LoginOnDTO loginonDTO) {
 		this.phone = loginonDTO.getAdminName().trim();
 		this.password = loginonDTO.getAdminPwd().trim();
+	}
+	
+	public UserModel(CheckIsPhoneRequestDTO checkIsPhoneRequestDTO) {
+		this.phone = (checkIsPhoneRequestDTO.getPhone() != null ? checkIsPhoneRequestDTO
+				.getPhone().trim() : null);
+	}
+	
+	public UserModel(UseVeriCodeResultDTO useVeriCodeResultDTO, String salt,
+			String userIdentifier, String saltPassword) {
+		this.phone = useVeriCodeResultDTO.getPhone();
+		this.salt = salt;
+		this.useridentifier = userIdentifier;
+		this.password = saltPassword;
+		this.status = 1;
+	}
+	
+	public UserModel(UserLoginRequestDTO userLoginRequestDTO) {
+		this.phone = userLoginRequestDTO.getPhone();
+		this.password = userLoginRequestDTO.getPassword();
 	}
 
 	public int getId() {

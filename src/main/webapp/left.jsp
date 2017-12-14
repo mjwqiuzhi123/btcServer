@@ -64,7 +64,7 @@ $(function(){
 				<span><img src="${pageContext.request.contextPath}/admin/images/leftico01.png" /></span>用户管理
 			</div>
 			<ul class="menuson">
-				<li><cite></cite><a href="${pageContext.request.contextPath}/user/userManager.json" target="rightFrame">用户信息查询</a><i></i></li>
+				<li><cite></cite><a href="${pageContext.request.contextPath}/front/user/userManager.json" target="rightFrame">用户信息查询</a><i></i></li>
 			</ul>
 		</dd>
 		<!-- 用户管理【结束】 -->

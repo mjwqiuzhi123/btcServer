@@ -16,7 +16,7 @@
     id, username, phone, password, address, email, sex,register_time,account_status
   </sql>
 
-	<!-- add by mjw -->
+	<!-- start by mjw -->
 	<sql id="baseSql">
 		id,
 		useridentifier,
@@ -36,6 +36,12 @@
 		signUpTime
 	</sql>
 
+	<insert id="saveUser" parameterType="com.btc.app.bean.UserModel">
+		insert into btcapp.user (useridentifier,phone,salt,password,status)
+		values
+		(#{useridentifier},#{phone},#{salt},#{password},#{status})
+	</insert>
+	
 	<select id="searcUserByPhone" parameterType="com.btc.app.bean.UserModel" resultType="com.btc.app.bean.UserModel">
 		select
 		<include refid="baseSql" />
@@ -55,8 +61,42 @@
 				and phone = #{t.phone}
 			</if>
 		</where>
-	</select>	
-	<!-- add by mjw -->
+	</select>
+	
+	<update id="updateByEntity" parameterType="com.btc.app.bean.UserModel">
+	update btcapp.user
+	<set>
+		<if test="useridentifier != null">
+			userIdentifier = #{useridentifier},
+		</if>
+		<if test="phone != null">
+			phone = #{phone},
+		</if>
+		<if test="password != null">
+			password = #{password},
+		</if>
+		<if test="lastfailedsignintime != null">
+			lastfailedsignintime = #{lastfailedsignintime},
+		</if>
+		<if test="loginfailedcount != null">
+			loginfailedcount = #{loginfailedcount},
+		</if>
+		<if test="salt != null">
+			salt = #{salt},
+		</if>
+		<if test="signuptime != null">
+			signUpTime = #{signuptime},
+		</if>
+		<if test="lastsuccesssignintime != null">
+			lastsuccesssignintime = #{lastsuccesssignintime},
+		</if>
+		<if test=" status != null">
+			status = #{status}
+		</if>
+	</set>
+		where id = #{id}
+	</update>	
+	<!-- end by mjw -->
 
     <select id="testConnect" resultMap="BaseResultMap" parameterType="java.lang.String">
         select

@@ -1,21 +1,5 @@
 package com.btc.app.service.impl;
 
-import com.borrow.supermarket.constant.MessageContent;
-import com.borrow.supermarket.dao.VericodesDao;
-import com.borrow.supermarket.model.VericodesModel;
-import com.borrow.supermarket.mq.MessageSend;
-import com.borrow.supermarket.response.result.SendMsgDTOResult;
-import com.borrow.supermarket.response.result.SendVeriCodeTokenDTOResult;
-import com.borrow.supermarket.response.result.UseVeriCodeResultDTO;
-import com.borrow.supermarket.response.result.VerifyGraphicCodeDTOResult;
-import com.borrow.supermarket.util.AliMessageUtil;
-import com.borrow.supermarket.util.CommonUtil;
-import com.borrow.supermarket.util.DateUtil;
-import com.borrow.supermarket.util.ResponseEntity;
-import com.borrow.supermarket.util.ServiceCode;
-import com.borrow.supermarket.util.SystemProperty;
-import com.btc.app.service.UserService;
-
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -23,8 +7,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.btc.app.bean.VericodesModel;
+import com.btc.app.constant.MessageConstant;
+import com.btc.app.dao.VericodesMapper;
+import com.btc.app.response.dto.SendMsgDTOResult;
+import com.btc.app.response.dto.SendVeriCodeTokenDTOResult;
+import com.btc.app.response.dto.UseVeriCodeResultDTO;
+import com.btc.app.response.dto.VerifyGraphicCodeDTOResult;
+import com.btc.app.service.UserService;
+import com.btc.app.service.VericodesService;
+import com.btc.app.util.AliMessageUtil;
+import com.btc.app.util.CommonUtil;
+import com.btc.app.util.DateUtil;
+import com.btc.app.util.ResponseEntity;
+import com.btc.app.util.ServiceCode;
+import com.btc.app.util.SystemProperty;
+
 @Service
-public class VericodesService
+public class VericodesServiceImpl implements VericodesService
 {
 
 	  //@Autowired
@@ -34,15 +34,18 @@ public class VericodesService
 	  private AliMessageUtil aliMessageUtil;
 
 	  @Autowired
-	  private VericodesDao vericodesDaoImpl;
+	  private VericodesMapper vericodesMapper;
 	  private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-	  public ResponseEntity sendWithTokenAsync(String cellphone, String token, int vericodeType)
+	  /* (non-Javadoc)
+	 * @see com.btc.app.service.impl.VericodesService#sendWithTokenAsync(java.lang.String, java.lang.String, int)
+	 */
+	public ResponseEntity sendWithTokenAsync(String cellphone, String token, int vericodeType)
 	    throws Exception
 	  {
 	    ResponseEntity messageResult = new ResponseEntity();
 	    VericodesModel vericode3 = new VericodesModel(Integer.valueOf(vericodeType), cellphone, DateUtil.GetDate(new Date()));
-	    VericodesModel vericode4 = this.vericodesDaoImpl.selectByEntity2(vericode3);
+	    VericodesModel vericode4 = this.vericodesMapper.selectByEntity2(vericode3);
 
 	    if ((vericode4 != null) && (vericode4.getTimes().intValue() >= 5)) {
 	      SendVeriCodeTokenDTOResult resultDTO = new SendVeriCodeTokenDTOResult(-1);
@@ -50,7 +53,8 @@ public class VericodesService
 	      messageResult.addProperty(resultDTO);
 	      return messageResult;
 	    }
-	    String veriCode = GenerateCode();//生成验证码
+	    //String veriCode = GenerateCode();//生成验证码
+	    String veriCode = "123456";//test
 
 	    if ((vericode4 != null) && (vericode4.getTimes().intValue() < 5)) {
 	      vericode4.setTimes(Integer.valueOf(vericode4.getTimes().intValue() + 1));
@@ -58,7 +62,7 @@ public class VericodesService
 	      if ((vericode4.getVerified().intValue() == 1) || 
 	        (vericode4
 	        .getUsed().intValue() == 1) || 
-	        (DateUtil.dateMinutesSub(new Date(), MessageContent.SMS_VALID_MINUTES)
+	        (DateUtil.dateMinutesSub(new Date(), MessageConstant.SMS_VALID_MINUTES)
 	        .after(vericode4.getBuildat()))) {
 	        vericode4.setCode(veriCode);
 	        vericode4.setUsed(Integer.valueOf(0));
@@ -70,7 +74,7 @@ public class VericodesService
 	        veriCode = vericode4.getCode();
 	      }
 
-	      Integer returnCode = Integer.valueOf(this.vericodesDaoImpl.updateByEntity(vericode4));
+	      Integer returnCode = Integer.valueOf(this.vericodesMapper.updateByEntity(vericode4));
 	      if (returnCode.intValue() <= 0) {
 	        log.error("更新验证码信息失败-----error---返回的结果是:" + returnCode + "验证码参数是:" + vericode4.toString());
 	      }
@@ -89,18 +93,18 @@ public class VericodesService
 	      vericode4.setVerified(Integer.valueOf(0));
 	      vericode4.setClientid("");
 
-	      Integer returnCode = this.vericodesDaoImpl.save(vericode4);
+	      Integer returnCode = this.vericodesMapper.save(vericode4);
 	      if (returnCode.intValue() <= 0) {
 	        log.error("保存验证码信息失败-----error---返回的结果是:" + returnCode + "验证码参数是:" + vericode4.toString());
 	      }
 
 	    }
 
-	    SendMsgDTOResult sendMsgDTOResult = new SendMsgDTOResult();
-	    sendMsgDTOResult.setCode(veriCode);
-	    sendMsgDTOResult.setMessageType(1);
-	    sendMsgDTOResult.setPhone(cellphone);
-	    AliMessageUtil.sendMsg(sendMsgDTOResult);
+//	    SendMsgDTOResult sendMsgDTOResult = new SendMsgDTOResult();
+//	    sendMsgDTOResult.setCode(veriCode);
+//	    sendMsgDTOResult.setMessageType(1);
+//	    sendMsgDTOResult.setPhone(cellphone);
+//	    AliMessageUtil.sendMsg(sendMsgDTOResult);
 
 	    messageResult.addProperty(new SendVeriCodeTokenDTOResult(5 - vericode4.getTimes().intValue()));
 	    messageResult.setMsg(ServiceCode.SUCCESS);
@@ -118,14 +122,17 @@ public class VericodesService
 	    return String.valueOf((int)((Math.random() * 9.0D + 1.0D) * 100000.0D));
 	  }
 
-	  public ResponseEntity verifyVeriAsync(String phone, String code, int vericodeType)
+	  /* (non-Javadoc)
+	 * @see com.btc.app.service.impl.VericodesService#verifyVeriAsync(java.lang.String, java.lang.String, int)
+	 */
+	public ResponseEntity verifyVeriAsync(String phone, String code, int vericodeType)
 	    throws Exception
 	  {
 	    ResponseEntity messageResult = new ResponseEntity();
 	    try
 	    {
-	      VericodesModel vericodeQuery = new VericodesModel(Integer.valueOf(vericodeType), phone, DateUtil.dateMinutesSub(new Date(), MessageContent.SMS_VALID_MINUTES));
-	      VericodesModel vericodeResult = this.vericodesDaoImpl.selectByEntity2(vericodeQuery);
+	      VericodesModel vericodeQuery = new VericodesModel(Integer.valueOf(vericodeType), phone, DateUtil.dateMinutesSub(new Date(), MessageConstant.SMS_VALID_MINUTES));
+	      VericodesModel vericodeResult = this.vericodesMapper.selectByEntity2(vericodeQuery);
 
 	      if (vericodeResult == null) {
 	        messageResult.setMsg(ServiceCode.VERIFYVERIASYNC_ONE);
@@ -140,7 +147,7 @@ public class VericodesService
 	      if (vericodeResult.getCode().equalsIgnoreCase(code)) {
 	        if (vericodeResult.getVerified().intValue() == 0) {
 	          vericodeResult.setVerified(Integer.valueOf(1));
-	          Integer returnCode = Integer.valueOf(this.vericodesDaoImpl.updateByEntity(vericodeResult));
+	          Integer returnCode = Integer.valueOf(this.vericodesMapper.updateByEntity(vericodeResult));
 	          if (returnCode.intValue() <= 0) {
 	            messageResult.setMsg(ServiceCode.DATABASE_UPDATE_ERROR);
 	            return messageResult;
@@ -155,7 +162,7 @@ public class VericodesService
 
 	      vericodeResult.setErrorcount(Integer.valueOf(vericodeResult.getErrorcount().intValue() + 1));
 	      vericodeResult.setVerified(Integer.valueOf(1));
-	      this.vericodesDaoImpl.updateByEntity(vericodeResult);
+	      this.vericodesMapper.updateByEntity(vericodeResult);
 
 	      VerifyGraphicCodeDTOResult resultDTO = new VerifyGraphicCodeDTOResult(5 - vericodeResult.getTimes().intValue());
 	      messageResult.setMsg(ServiceCode.VERIFYVERIASYNC_THREE);
@@ -167,7 +174,10 @@ public class VericodesService
 	  }
 	  
 	  //注册相关
-	  public ResponseEntity searchByIndentFierAndType(VericodesModel vericodesModel)
+	  /* (non-Javadoc)
+	 * @see com.btc.app.service.impl.VericodesService#searchByIndentFierAndType(com.btc.app.bean.VericodesModel)
+	 */
+	public ResponseEntity searchByIndentFierAndType(VericodesModel vericodesModel)
 	    throws Exception
 	  {
 	    ResponseEntity messageResult = new ResponseEntity();
@@ -176,7 +186,7 @@ public class VericodesService
 	    try {
 	      VericodesModel verico = new VericodesModel(vericodesModel.getCode(), vericodesModel.getType(), DateUtil.dateMinutesSub(new Date(), 30));
 
-	      vericod = this.vericodesDaoImpl.selectByEntity(verico);
+	      vericod = this.vericodesMapper.selectByEntity(verico);
 	      if (vericod != null) {
 	        if (vericod.getVerified().intValue() == 0) {
 	          returnDTO = new UseVeriCodeResultDTO(vericodesModel.getPhone());
@@ -193,7 +203,7 @@ public class VericodesService
 	        }
 
 	        vericod.setUsed(Integer.valueOf(1));
-	        this.vericodesDaoImpl.updateByEntity(vericod);
+	        this.vericodesMapper.updateByEntity(vericod);
 	        returnDTO = new UseVeriCodeResultDTO(vericod.getPhone());
 	        messageResult.addProperty(returnDTO);
 	        return messageResult;
@@ -202,6 +212,7 @@ public class VericodesService
 	      return messageResult;
 	    }
 	    catch (Exception e) {
+	    	e.printStackTrace();
 	      log.error("按照验证码类型和token查询对应的数据信息:操作类是:VericodesServiceI方法是:searchByIndentFierAndTyper参数是:【验证码类型是:" + vericodesModel
 	        .getType() + "token的值是:" + vericodesModel.getIdentifier() + "操作失败=======================error原因是】" + e.getMessage());
 

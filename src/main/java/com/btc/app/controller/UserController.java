@@ -1,6 +1,9 @@
 package com.btc.app.controller;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,26 +21,40 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.btc.app.base64.Base64Server;
 import com.btc.app.bean.UserBean;
 import com.btc.app.bean.UserModel;
+import com.btc.app.bean.VericodesModel;
+import com.btc.app.enums.VeriCode;
+import com.btc.app.enums.VeriCodeNum;
+import com.btc.app.request.dto.CheckIsPhoneRequestDTO;
 import com.btc.app.request.dto.LoginOnDTO;
 import com.btc.app.request.dto.PageParameter;
+import com.btc.app.request.dto.ResetLoginPasswordRequestDTO;
+import com.btc.app.request.dto.UserLoginRequestDTO;
 import com.btc.app.request.dto.UserRegisterRequestDTO;
+import com.btc.app.response.dto.UseVeriCodeResultDTO;
 import com.btc.app.service.UserService;
+import com.btc.app.service.VericodesService;
 import com.btc.app.util.Constant;
+import com.btc.app.util.DateUtil;
 import com.btc.app.util.MD5Utils;
 import com.btc.app.util.ResponseEntity;
+import com.btc.app.util.ServiceCode;
 
 /**
  * Created by cuixuan
  */
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/front/user")
 public class UserController extends BaseController{
     @Resource
     private UserService userService;
-      //add by mjw
+
+	// start by mjw
+    @Autowired
+    private VericodesService vericodesService;
 	  @RequestMapping({"/login.json"})
 	  public ModelAndView loginPage(HttpServletRequest request, HttpServletResponse response)
 	  {
@@ -122,7 +139,7 @@ public class UserController extends BaseController{
 	    mv.setViewName("userManager");
 	    return mv;
 	  }
-	//add by mjw
+	//end by mjw
     
     @RequestMapping("/login")
     public @ResponseBody
@@ -221,8 +238,75 @@ public class UserController extends BaseController{
         return json.toJSONString();
     }
     
+    // start by mjw
+    
+ // App login
+    @RequestMapping(value={"/userlogin.json"}, method={org.springframework.web.bind.annotation.RequestMethod.POST}, produces={"application/json; charset=utf-8"})
+    public @ResponseBody ResponseEntity userLogin(HttpServletRequest request, HttpServletResponse response, @Valid UserLoginRequestDTO userLoginRequestDTO, BindingResult bind)
+    {
+      ResponseEntity responseEntity = new ResponseEntity();
+      try {
+        if (bind.hasErrors()) {
+          return getValidErrors(bind);
+        }
+        //CurrentUser currentUser = getCurrentUser(request);
+        StringBuilder userIdentifier = new StringBuilder();
+        StringBuilder cellphone = new StringBuilder();
+        ResponseEntity result = this.userService.searchUserByNameAndPwd(userLoginRequestDTO, userIdentifier, cellphone);
+//        if (!result.getResultCode().equals("0000")) {
+//          if (currentUser != null) {
+//            Cookie[] cookies = request.getCookies();
+//            if (cookies != null) {
+//              for (int i = 0; i < cookies.length; i++) {
+//                if (cookies[i].getName().equals("CBDC")) {
+//                  cookies[i].setMaxAge(0);
+//                  cookies[i].setPath("/");
+//                  response.addCookie(cookies[i]);
+//                  break;
+//                }
+//              }
+//            }
+//          }
+//
+//          return result;
+//        }
+        int expireMinutes = 30;
+        String clientID = request.getHeader("ClientID");
+        if ((clientID != null) && (!clientID.isEmpty()))
+          expireMinutes = 10080;
+        Cookie cookie = new Cookie("CBDC", new Base64Server().encrypted(cellphone.toString(), userIdentifier.toString(), DateUtil.dateMinutesAdd(new Date(), expireMinutes)));
+        cookie.setMaxAge((expireMinutes + 10) * 60);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        response.addHeader("P3P", "CP=CAO PSA OUR");
+        return responseEntity;
+      } catch (Exception e) {
+        responseEntity.setMsg(ServiceCode.EXCEPTION);
+      }return responseEntity;
+    }
+    
+    @RequestMapping(value={"/userloginOut.json"}, method={org.springframework.web.bind.annotation.RequestMethod.GET}, produces={"application/json; charset=utf-8"})
+    public @ResponseBody ResponseEntity userloginOut(HttpServletRequest request, HttpServletResponse response)
+    {
+      Cookie[] cookies = request.getCookies();
+
+      if (cookies != null) {
+        for (int i = 0; i < cookies.length; i++) {
+          if (cookies[i].getName().equals("CBDC")) {
+            cookies[i].setMaxAge(0);// 设置Cookie立即失效  
+            cookies[i].setPath("/");
+            response.addCookie(cookies[i]);
+            break;
+          }
+        }
+      }
+
+      ResponseEntity messageResult = new ResponseEntity();
+      return messageResult;
+    }
+    
     @RequestMapping(value={"/register.json"}, method={org.springframework.web.bind.annotation.RequestMethod.GET}, produces={"application/json; charset=utf-8"})
-    public ResponseEntity userRegister(HttpServletRequest request, HttpServletResponse response, @Valid UserRegisterRequestDTO userRegisterRequestDTO, BindingResult bind)
+    public @ResponseBody ResponseEntity userRegister(HttpServletRequest request, HttpServletResponse response, @Valid UserRegisterRequestDTO userRegisterRequestDTO, BindingResult bind)
     {
       ResponseEntity responseEntity = new ResponseEntity();
       try {
@@ -230,20 +314,20 @@ public class UserController extends BaseController{
           return getValidErrors(bind);
         }
 
-        responseEntity = this.vericodesServiceImpl.searchByIndentFierAndType(new VericodesModel(userRegisterRequestDTO.getToken(), VeriCodeNum.ToCodeType(VeriCode.VeriCodeType.SignUp)));
+        responseEntity = this.vericodesService.searchByIndentFierAndType(new VericodesModel(userRegisterRequestDTO.getToken(), VeriCodeNum.ToCodeType(VeriCode.VeriCodeType.SignUp)));
         if (!responseEntity.getResultCode().equals("0000")) {
           return responseEntity;
         }
 
         UseVeriCodeResultDTO useVeriCodeResultDTO = (UseVeriCodeResultDTO)responseEntity.getDTO(UseVeriCodeResultDTO.class);
 
-        boolean isExit = this.userServiceI.searcUserByPhone(new CheckIsPhoneRequestDTO(useVeriCodeResultDTO));
+        boolean isExit = this.userService.searcUserByPhone(new CheckIsPhoneRequestDTO(useVeriCodeResultDTO));
         if (!isExit) {
           responseEntity.setMsg(ServiceCode.REGISTER_ONE);
           return responseEntity;
         }
 
-        boolean userModel = this.userServiceI.saveUser(userRegisterRequestDTO, useVeriCodeResultDTO);
+        boolean userModel = this.userService.saveUser(userRegisterRequestDTO, useVeriCodeResultDTO);
         if (!userModel) {
           responseEntity.setMsg(ServiceCode.ERROR);
           return responseEntity;
@@ -253,4 +337,24 @@ public class UserController extends BaseController{
         responseEntity.setMsg(ServiceCode.EXCEPTION);
       }return responseEntity;
     }
+    
+    @RequestMapping(value={"/resetPassword.json"}, method={org.springframework.web.bind.annotation.RequestMethod.POST}, produces={"application/json; charset=utf-8"})
+    public @ResponseBody ResponseEntity resetLoginPassword(HttpServletRequest request, HttpServletResponse response, @Valid @ModelAttribute("resetLoginPassword") ResetLoginPasswordRequestDTO resetLoginPasswordRequestDTO, BindingResult bind)
+      throws Exception
+    {
+      if (bind.hasErrors()) {
+        return getValidErrors(bind);
+      }
+
+      ResponseEntity messageResult = this.vericodesService.searchByIndentFierAndType(new VericodesModel(resetLoginPasswordRequestDTO.getToken(), VeriCodeNum.ToCodeType(VeriCode.VeriCodeType.ResetLoginPassword)));
+      if (!messageResult.getResultCode().equals("0000")) {
+        return messageResult;
+      }
+
+      UseVeriCodeResultDTO useVeriCodeResultDTO = (UseVeriCodeResultDTO)messageResult.getDTO(UseVeriCodeResultDTO.class);
+      ResponseEntity messageResult1 = this.userService.resetLoginPassword(useVeriCodeResultDTO.getPhone(), resetLoginPasswordRequestDTO.getPassword(), resetLoginPasswordRequestDTO.getToken());
+
+      return messageResult1;
+    }
+    //end by mjw
 }

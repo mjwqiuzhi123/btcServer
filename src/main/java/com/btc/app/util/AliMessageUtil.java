@@ -1,5 +1,8 @@
 package com.btc.app.util;
 
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
@@ -7,10 +10,7 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-import com.borrow.supermarket.response.result.SendMsgDTOResult;
-import java.io.PrintStream;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import com.btc.app.response.dto.SendMsgDTOResult;
 
 @Component
 public class AliMessageUtil
