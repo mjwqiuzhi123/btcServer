@@ -168,7 +168,8 @@ public class UserServiceImpl implements UserService {
 	      String userIdentifier = CommonUtil.getUUID();
 	      String password = userRegisterRequestDTO.getPassword();
 	      String saltPassword = PasswordHash.createHash(password, salt);
-	      return this.userDao.saveUser(new UserModel(useVeriCodeResultDTO, salt, userIdentifier, saltPassword));
+	      userRegisterRequestDTO.setPassword(saltPassword);
+	      return this.userDao.saveUser(new UserModel(useVeriCodeResultDTO, salt, userIdentifier, userRegisterRequestDTO));
 	    } catch (Exception e) {
 	      logger.error(new StringBuilder().append("用户注册失败失败的原因是:").append(e.getMessage()).toString());
 	      logger.error(new StringBuilder().append("参数phone = ").append(userRegisterRequestDTO).toString() == null ? null : useVeriCodeResultDTO.getPhone());

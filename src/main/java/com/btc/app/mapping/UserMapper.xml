@@ -37,9 +37,9 @@
 	</sql>
 
 	<insert id="saveUser" parameterType="com.btc.app.bean.UserModel">
-		insert into btcapp.user (useridentifier,phone,salt,password,status)
+		insert into btcapp.user (useridentifier,username,phone,salt,password,address,email,sex,status,signUpTime)
 		values
-		(#{useridentifier},#{phone},#{salt},#{password},#{status})
+		(#{useridentifier},#{username},#{phone},#{salt},#{password},#{address},#{email},#{sex},#{status},NOW())
 	</insert>
 	
 	<select id="searcUserByPhone" parameterType="com.btc.app.bean.UserModel" resultType="com.btc.app.bean.UserModel">

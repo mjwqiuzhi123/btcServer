@@ -6,6 +6,7 @@ import java.util.Date;
 import com.btc.app.request.dto.CheckIsPhoneRequestDTO;
 import com.btc.app.request.dto.LoginOnDTO;
 import com.btc.app.request.dto.UserLoginRequestDTO;
+import com.btc.app.request.dto.UserRegisterRequestDTO;
 import com.btc.app.response.dto.UseVeriCodeResultDTO;
 
 public class UserModel implements Serializable {
@@ -15,14 +16,50 @@ public class UserModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String useridentifier;
+	private String username;
 	private String phone;
 	private String salt;
 	private String password;
+	private String address;
+	private String email;
+	private boolean sex;
 	private int status;
 	private Date lastfailedsignintime;
 	private int loginfailedcount;
 	private Date lastsuccesssignintime;
 	private Date signuptime;
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public boolean isSex() {
+		return sex;
+	}
+
+	public void setSex(boolean sex) {
+		this.sex = sex;
+	}
 
 	public String getPhone() {
 		return this.phone;
@@ -69,12 +106,15 @@ public class UserModel implements Serializable {
 				.getPhone().trim() : null);
 	}
 	
-	public UserModel(UseVeriCodeResultDTO useVeriCodeResultDTO, String salt,
-			String userIdentifier, String saltPassword) {
+	public UserModel(UseVeriCodeResultDTO useVeriCodeResultDTO, String salt, String userIdentifier, UserRegisterRequestDTO userRegisterRequestDTO) {
 		this.phone = useVeriCodeResultDTO.getPhone();
 		this.salt = salt;
 		this.useridentifier = userIdentifier;
-		this.password = saltPassword;
+		this.username = userRegisterRequestDTO.getUsername();
+		this.password = userRegisterRequestDTO.getPassword();
+		this.address = userRegisterRequestDTO.getAddress();
+		this.email = userRegisterRequestDTO.getEmail();
+		this.sex = userRegisterRequestDTO.isSex();
 		this.status = 1;
 	}
 	

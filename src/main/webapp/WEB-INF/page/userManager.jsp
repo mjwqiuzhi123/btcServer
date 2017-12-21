@@ -81,7 +81,7 @@ window.location.href = "${pageContext.request.contextPath}/admin/safe/safeAddPag
     <li><a href="#">用户列表展示</a></li>
     </ul>
     </div>
-    <form action="${pageContext.request.contextPath}/admin/users/userManager.json" method="post"  id="fenye" name="fenye">
+    <form action="${pageContext.request.contextPath}/admin/userManager.json" method="post"  id="fenye" name="fenye">
     <div class="rightinfo">
     <div class="tools">
     <ul class="seachform">
@@ -99,7 +99,6 @@ window.location.href = "${pageContext.request.contextPath}/admin/safe/safeAddPag
     <th>用户登录时间</th>
     <th>用户最后一次登录成功时间</th>
     <th>用户最后一次登录失败时间</th>
-    <th>操作</th>
     </tr>
     </thead>
     <tbody>
@@ -118,11 +117,11 @@ window.location.href = "${pageContext.request.contextPath}/admin/safe/safeAddPag
 			    	 <fmt:formatDate value="${user.lastsuccesssignintime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 			     </c:if>
 		     </td>
-		    <td>${user.lastfailedsignintime}</td>
-		    <td>
-<%-- 		         <a href="${pageContext.request.contextPath}/order/orderDetails.json?id=${order.id}" class="tablelink">详情</a> --%>
-			     <a href="${pageContext.request.contextPath}/admin/users/userOrderManager.json?orderPhone=${user.phone}" class="tablelink">借贷订单</a>
-		    </td>
+		     <td>
+			     <c:if test="${not empty user.lastfailedsignintime}">
+			    	 <fmt:formatDate value="${user.lastfailedsignintime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+			     </c:if>
+		     </td>
 	    </tr>
     </c:forEach>
     </tbody>

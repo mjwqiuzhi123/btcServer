@@ -58,7 +58,7 @@
     
     <span class="systemlogo"></span> 
     <div><center><c:if test="${not empty error}"><span style="color: red;font-size: 20px;font-weight: bold;">${error}</span></c:if></center></div>
-    <form action="${pageContext.request.contextPath}/front/user/loginOn.json" method="post">
+    <form action="${pageContext.request.contextPath}/admin/loginOn.json" method="post">
 	    <div class="loginbox">
 		    <ul>
 			    <li><input name="adminName" id="adminName" type="text" class="loginuser" value="" onclick="JavaScript:this.value=''"/></li>
