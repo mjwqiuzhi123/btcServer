@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.btc.app.dao.MessageDao">
+
+	<!-- add by mjw-->
+	<select id="getNews" parameterType="com.btc.app.bean.MessageModel" resultType="String">
+		select news from btcapp.message
+	</select>
+
+	<insert id="saveNews" parameterType="com.btc.app.bean.MessageModel">
+		insert into btcapp.message (news) values (#{news})
+	</insert>
+
+	<update id="updateNews" parameterType="com.btc.app.bean.MessageModel">
+		update btcapp.message set news = #{news} where type = #{type}
+	</update>
+
+	<select id="hasNews" resultType="Integer">
+		select count(1) from btcapp.message where type = #{type}
+	</select>
+	<!-- add by mjw-->
+	
+</mapper>

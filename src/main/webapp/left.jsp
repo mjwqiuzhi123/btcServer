@@ -47,13 +47,13 @@ $(function(){
     
     <dl class="leftmenu">
         <!-- 第三方录入 【开始】-->
-         <dd style="display: none;"><div class="title"><span><img src="${pageContext.request.contextPath}/admin/images/leftico03.png" /></span>平台管理</div>
+         <dd><div class="title"><span><img src="${pageContext.request.contextPath}/admin/images/leftico03.png" /></span>新闻管理</div>
 		    <ul class="menuson">
-		        <li><cite></cite><a href="${pageContext.request.contextPath}/admin/safe/safeManager.json" target="rightFrame">保险管理</a><i></i></li>
+<%-- 		        <li><cite></cite><a href="${pageContext.request.contextPath}/admin/safe/safeManager.json" target="rightFrame">保险管理</a><i></i></li>
 		        <li><cite></cite><a href="${pageContext.request.contextPath}/admin/lend/lendManager.json" target="rightFrame">借贷管理</a><i></i></li>
 		        <li><cite></cite><a href="${pageContext.request.contextPath}/admin/credit/creditManager.json" target="rightFrame">信用卡管理</a><i></i></li>
-		        <li><cite></cite><a href="${pageContext.request.contextPath}/admin/home/homeMessageManager.json" target="rightFrame">首页信息管理</a><i></i></li>
-		        <li><cite></cite><a href="${pageContext.request.contextPath}/admin/find/findContentManager.json" target="rightFrame">发现页面管理</a><i></i></li>
+		        <li><cite></cite><a href="${pageContext.request.contextPath}/admin/home/homeMessageManager.json" target="rightFrame">首页信息管理</a><i></i></li> --%>
+		        <li><cite></cite><a href="${pageContext.request.contextPath}/admin/news/manager.json" target="rightFrame">新闻录入</a><i></i></li>
 		    </ul>
     	 </dd>
         <!-- 第三方录入【结束】 -->
