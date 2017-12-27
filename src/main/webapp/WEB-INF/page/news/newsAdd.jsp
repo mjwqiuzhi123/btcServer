@@ -71,6 +71,7 @@ $(document).ready(function(){
 	    <div class="formbody">
 	    <div class="formtitle"><span>发现内容</span></div>
 	    <ul class="forminfo">
+	    <input type="hidden" name="id"  value="${model.id}"/> 
 	    <li><label>新闻内容</label><textarea name="news" style="height: 200px; width: 500px; border:solid; border-color:black; background-color:transparent;"></textarea></li>
 	     <li>
 	         <label>&nbsp;</label><input name="" type="submit" class="btn" value="确认保存"/>

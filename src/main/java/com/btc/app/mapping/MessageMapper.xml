@@ -4,17 +4,21 @@
 <mapper namespace="com.btc.app.dao.MessageDao">
 
 	<!-- add by mjw-->
-	<select id="getNews" parameterType="com.btc.app.bean.MessageModel" resultType="String">
-		select news from btcapp.message
+	<select id="getByPage" parameterType="java.util.Map" resultType="com.btc.app.bean.MessageModel">
+		select id,news from btcapp.message
 	</select>
 
-	<insert id="saveNews" parameterType="com.btc.app.bean.MessageModel">
+	<insert id="save" parameterType="com.btc.app.bean.MessageModel">
 		insert into btcapp.message (news) values (#{news})
 	</insert>
 
-	<update id="updateNews" parameterType="com.btc.app.bean.MessageModel">
-		update btcapp.message set news = #{news} where type = #{type}
+	<update id="update" parameterType="com.btc.app.bean.MessageModel">
+		update btcapp.message set news = #{news} where id = #{id}
 	</update>
+
+	<delete id="delete" parameterType="com.btc.app.bean.MessageModel">
+		delete from btcapp.message set where id = #{id}
+	</delete>
 
 	<select id="hasNews" resultType="Integer">
 		select count(1) from btcapp.message where type = #{type}

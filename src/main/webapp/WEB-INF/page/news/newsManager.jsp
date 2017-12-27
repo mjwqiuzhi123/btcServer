@@ -66,7 +66,7 @@ $(document).ready(function(){
 });
 </script>
 <script type="text/javascript">
-function findContentAdd(){
+function newsAdd(){
 
 // alert("${pageContext.request.contextPath}/lend/lendAddPage.json");
 window.location.href = "${pageContext.request.contextPath}/admin/news/addPage.json";
@@ -77,32 +77,36 @@ window.location.href = "${pageContext.request.contextPath}/admin/news/addPage.js
 	<div class="place">
     <span>位置：</span>
     <ul class="placeul">
-    <li><a href="#">平台管理</a></li>
-    <li><a href="#">首页信息列表</a></li>
+    <li><a href="#">新闻管理</a></li>
+    <li><a href="#">新闻列表</a></li>
     </ul>
     </div>
     <form action="${pageContext.request.contextPath}/admin/credit/creditManager.json" method="post"  id="fenye" name="fenye">
     <div class="rightinfo">
     <div class="tools">
     <ul class="seachform">
-    <li><label>&nbsp;</label><input name="" type="button" class="scbtn" value="平台添加" onclick="findContentAdd()"/></li>
+    <li><label>&nbsp;</label><input name="" type="button" class="scbtn" value="新闻添加" onclick="newsAdd()"/></li>
   	</ul> 
     </div>
-    
-    
+    <div>
+    	<c:if test="${flag eq 1}">alert("更新成功")</c:if>
+    	<c:if test="${flag eq 2}">alert("删除成功")</c:if>
+    </div>
     <table class="imgtable">
     
     <thead>
-    <tr id="thdiv">
-    <th>发现内容</th>
-    </tr>
+	    <tr id="thdiv">
+		    <th>新闻内容</th>
+		    <th>更新操作</th>
+		    <th>删除操作</th>
+	    </tr>
     </thead>
     <tbody>
     <c:forEach var="news" items="${newsList}">
 	    <tr id="divtr">
-		   <td style="height: 50px">${news}</td>
-		   <td style="height: 50px"><a href="${pageContext.request.contextPath}/admin/order/orderDetails.json?id=${order.id}" class="tablelink">详情</a>更新</td>
-		   <td style="height: 50px"><a href="${pageContext.request.contextPath}/admin/order/orderDetails.json?id=${order.id}" class="tablelink">详情</a>删除</td>
+		   <td style="height: 50px; width: 80%">${news.news}</td>
+		   <td style="height: 50px"><a href="${pageContext.request.contextPath}/admin/news/update.json?id=${news.id}" class="tablelink">更新</a></td>
+		   <td style="height: 50px"><a href="${pageContext.request.contextPath}/admin/news/delete.json?id=${news.id}" class="tablelink">删除</a></td>
 	    </tr>
     </c:forEach>
     </tbody>
