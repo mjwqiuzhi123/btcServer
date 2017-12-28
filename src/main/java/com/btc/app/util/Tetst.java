@@ -1,13 +1,20 @@
 package com.btc.app.util;
 
 
-import com.tencent.xinge.*;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONObject;
+
+import com.tencent.xinge.ClickAction;
+import com.tencent.xinge.Message;
+import com.tencent.xinge.MessageIOS;
+import com.tencent.xinge.Style;
+import com.tencent.xinge.TagTokenPair;
+import com.tencent.xinge.TimeInterval;
+import com.tencent.xinge.XingeApp;
 
 /**
  * Created by Zcpwillam on 2017/5/24.

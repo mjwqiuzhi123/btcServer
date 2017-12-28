@@ -9,15 +9,15 @@
 	</select>
 
 	<insert id="save" parameterType="com.btc.app.bean.MessageModel">
-		insert into btcapp.message (news) values (#{news})
+		insert into btcapp.message (title,news,newsUrl) values (#{title},#{news},#{newsUrl})
 	</insert>
 
 	<update id="update" parameterType="com.btc.app.bean.MessageModel">
-		update btcapp.message set news = #{news} where id = #{id}
+		update btcapp.message set title = #{title},news = #{news},newsUrl = #{newsUrl} where id = #{id}
 	</update>
 
 	<delete id="delete" parameterType="com.btc.app.bean.MessageModel">
-		delete from btcapp.message set where id = #{id}
+		delete from btcapp.message where id = #{id}
 	</delete>
 
 	<select id="hasNews" resultType="Integer">

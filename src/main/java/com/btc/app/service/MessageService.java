@@ -79,4 +79,15 @@ public class MessageService {
 		}
 		return null;
 	}
+	
+	// 展示新闻信息
+	public List<MessageModel> selectShowNewsList() {
+		try {
+			return this.messageDaoI.showNews();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("获取新闻操作异常---原因是-----:" + e.getMessage());
+		}
+		return null;
+	}
 }

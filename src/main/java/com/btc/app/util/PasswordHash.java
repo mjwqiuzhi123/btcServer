@@ -2,11 +2,10 @@ package com.btc.app.util;
 /**
  * @author mjw
  */
-import java.io.PrintStream;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import javax.crypto.SecretKey;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 

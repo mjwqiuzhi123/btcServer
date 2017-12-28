@@ -2,12 +2,12 @@ package com.btc.app.util;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 public class SqlSessionFactoryUtil {
     //SQLSessionFactory对象
     private static SqlSessionFactory sqlSessionFactory = null;

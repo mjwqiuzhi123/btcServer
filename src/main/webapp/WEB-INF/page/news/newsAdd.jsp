@@ -67,12 +67,15 @@ $(document).ready(function(){
     <li><a href="#">新闻录入</a></li>
     </ul>
     </div>
-    <form action="${pageContext.servletContext.contextPath}/admin/news/add.json" method="post">
+    <form action="${pageContext.servletContext.contextPath}/admin/news/add.json" method="post" enctype="multipart/form-data">
 	    <div class="formbody">
-	    <div class="formtitle"><span>发现内容</span></div>
+	    <div class="formtitle"><span>新闻信息</span></div>
 	    <ul class="forminfo">
-	    <input type="hidden" name="id"  value="${model.id}"/> 
-	    <li><label>新闻内容</label><textarea name="news" style="height: 200px; width: 500px; border:solid; border-color:black; background-color:transparent;"></textarea></li>
+	    <li><label></label><input type="hidden" name="id"  value="${model.id}"/></li>
+	   	<li><label>新闻标题</label><input name="title" type="text" class="dfinput" /></li>
+	    <li><label>新闻图标</label><input type="file" name="file"/></li>
+	    <li><label>新闻URL地址</label><input name="newsUrl" type="text" class="dfinput" /></li> 
+	    <li><label>新闻内容</label><textarea name="news" style="height: 600px; width: 80%; border:solid; border-color:black; background-color:transparent;"></textarea></li>
 	     <li>
 	         <label>&nbsp;</label><input name="" type="submit" class="btn" value="确认保存"/>
 	         <label>&nbsp;</label><input name="" onclick="javascript:history.go(-1)" type="button" class="btn" value="返回"/>

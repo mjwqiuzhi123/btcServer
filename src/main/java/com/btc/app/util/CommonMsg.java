@@ -1,7 +1,8 @@
 package com.btc.app.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CommonMsg implements Serializable {
 	/**
