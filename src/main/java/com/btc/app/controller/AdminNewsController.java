@@ -79,7 +79,9 @@ public class AdminNewsController {
 	@RequestMapping(value = { "/update.json" })
 	public String newsUpdate(HttpServletRequest request, HttpServletResponse response, MessageModel model) throws Exception {
 		request.setAttribute("update", "update");
-		request.setAttribute("model", model);
+		MessageModel updateNews = this.MessageServiceI.selectNews(model);
+		if(updateNews != null)
+			request.setAttribute("model", updateNews);
 		return "forward:addPage.json";
 	}
 	
@@ -88,7 +90,7 @@ public class AdminNewsController {
 		boolean returnFlag = false;
 		Map returnResult = ImageUtil.imagePath2(file, "news", request, response);
 		boolean flag = ((Boolean) returnResult.get("flag")).booleanValue();
-		if (!flag) {
+		if (messageModel == null && messageModel.getId() <=0 && !flag) {
 			return "redirect:addPage.json";
 		}
 

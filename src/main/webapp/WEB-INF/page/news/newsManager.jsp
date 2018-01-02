@@ -96,15 +96,21 @@ window.location.href = "${pageContext.request.contextPath}/admin/news/addPage.js
     
     <thead>
 	    <tr id="thdiv">
-		    <th>新闻内容</th>
-		    <th>更新操作</th>
-		    <th>删除操作</th>
+	    <th>新闻标题</th>
+	    <th>新闻图标</th>
+	    <th>新闻链接</th>
+	    <th>新闻内容</th>
+	    <th>更新操作</th>
+	    <th>删除操作</th>
 	    </tr>
     </thead>
     <tbody>
     <c:forEach var="news" items="${newsList}">
 	    <tr id="divtr">
-		   <td style="height: 50px; width: 80%">${news.news}</td>
+	   	   <td style="height: 50px; width: auto">${news.title}</td>
+	   	   <td class="imgtd"><img src="${news.picLocation}" width="50px" height="50px"/></td>
+	       <td style="height: 50px; width: auto">${news.newsUrl}</td>
+		   <td style="height: 50px; width: auto">${news.news}</td>
 		   <td style="height: 50px"><a href="${pageContext.request.contextPath}/admin/news/update.json?id=${news.id}" class="tablelink">更新</a></td>
 		   <td style="height: 50px"><a href="${pageContext.request.contextPath}/admin/news/delete.json?id=${news.id}" class="tablelink">删除</a></td>
 	    </tr>

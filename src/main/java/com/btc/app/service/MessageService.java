@@ -80,6 +80,17 @@ public class MessageService {
 		return null;
 	}
 	
+	// 获取新闻信息
+	public MessageModel selectNews(MessageModel model) {
+		try {
+			return this.messageDaoI.getInfo(model);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("获取新闻操作异常---原因是-----:" + e.getMessage());
+		}
+		return null;
+	}
+	
 	// 展示新闻信息
 	public List<MessageModel> selectShowNewsList() {
 		try {

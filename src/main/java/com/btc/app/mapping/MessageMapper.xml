@@ -5,15 +5,19 @@
 
 	<!-- add by mjw-->
 	<select id="getByPage" parameterType="java.util.Map" resultType="com.btc.app.bean.MessageModel">
-		select id,news from btcapp.message
+		select * from btcapp.message
+	</select>
+	
+	<select id="getInfo" parameterType="com.btc.app.bean.MessageModel" resultType="com.btc.app.bean.MessageModel">
+		select * from btcapp.message where id = #{id}
 	</select>
 
 	<insert id="save" parameterType="com.btc.app.bean.MessageModel">
-		insert into btcapp.message (title,news,newsUrl) values (#{title},#{news},#{newsUrl})
+		insert into btcapp.message (title,picLocation,news,newsUrl) values (#{title},#{picLocation},#{news},#{newsUrl})
 	</insert>
 
 	<update id="update" parameterType="com.btc.app.bean.MessageModel">
-		update btcapp.message set title = #{title},news = #{news},newsUrl = #{newsUrl} where id = #{id}
+		update btcapp.message set title = #{title},news = #{news},newsUrl = #{newsUrl},picLocation = #{picLocation} where id = #{id}
 	</update>
 
 	<delete id="delete" parameterType="com.btc.app.bean.MessageModel">
