@@ -12,6 +12,16 @@
 		select * from btcapp.message where id = #{id}
 	</select>
 
+	<select id="getAll" parameterType="com.btc.app.bean.MessageModel" resultType="com.btc.app.bean.MessageModel">
+		select * from btcapp.message
+<!-- 		<where>
+			1 = 1
+			<if test="t.safeName != null and t.safeName != '' ">
+				and safeName = #{t.safeName}
+			</if>
+		</where> -->
+	</select>
+
 	<insert id="save" parameterType="com.btc.app.bean.MessageModel">
 		insert into btcapp.message (title,picLocation,news,newsUrl) values (#{title},#{picLocation},#{news},#{newsUrl})
 	</insert>

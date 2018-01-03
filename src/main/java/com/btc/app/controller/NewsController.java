@@ -1,5 +1,7 @@
 package com.btc.app.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.btc.app.bean.CommentModel;
 import com.btc.app.bean.MessageModel;
 import com.btc.app.request.dto.PageParameter;
 import com.btc.app.service.MessageService;
 import com.btc.app.util.ResponseEntity;
+import com.btc.app.util.ServiceCode;
 
 @RequestMapping({ "/front/news" })
 @Controller
@@ -79,11 +83,25 @@ public class NewsController {
 		return "forward:addPage.json";
 	}
 
-	//get news
-	@RequestMapping({ "/shownews.json" })
-	public ResponseEntity showNews(HttpServletRequest request,HttpServletResponse response) throws Exception {
+	//get home news
+	@RequestMapping(value = { "/showNews.json" })
+	@ResponseBody
+	public ResponseEntity showNews(HttpServletRequest request,HttpServletResponse response, MessageModel model) throws Exception {
 		ResponseEntity re = new ResponseEntity();
-		//MessageServiceI.selectNewsList();
-		return null;
+		List<MessageModel> newsList = MessageServiceI.ShowNewsList(model);
+		re.addProperty(newsList);
+		return re;
+	}
+	
+	//get home news
+	@RequestMapping(value = { "/insertComment.json" }, method={org.springframework.web.bind.annotation.RequestMethod.POST})
+	@ResponseBody
+	public ResponseEntity insertComment(HttpServletRequest request,HttpServletResponse response, CommentModel model) throws Exception {
+		ResponseEntity re = new ResponseEntity();
+		boolean flag = MessageServiceI.insertComment(model);
+		if(!flag){
+			re.setMsg(ServiceCode.ERROR);
+		}
+		return re;
 	}
 }
